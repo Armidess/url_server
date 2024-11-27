@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from urllib.parse import urlparse
+from url_server.url_preprocess import check_url 
 
 def process_url(request):
     url = request.GET.get('url')
@@ -15,14 +16,13 @@ def process_url(request):
         if not parsed_url.scheme or not parsed_url.netloc:
             raise ValueError('Invalid URL')
         
-        # Add your URL processing logic here
+        [flag] = check_url(url)
+        # print(flag)
         result = {
             'url': url,
-            'domain': parsed_url.netloc,
-            'scheme': parsed_url.scheme,
-            'path': parsed_url.path,
+            'result' : bool(flag),
         }
-        
+        # print(6)
         return JsonResponse(result)
     
     except ValueError as e:
